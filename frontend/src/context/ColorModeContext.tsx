@@ -10,6 +10,9 @@ export const ColorModeContext = createContext<{
 	toggleColorMode: () => {},
 });
 
+export const PRIMARY_COLOR = deepPurple;
+export const SECONDARY_COLOR = deepOrange;
+
 export const ColorModeContextProvider = ({
 	children,
 }: {
@@ -40,8 +43,8 @@ export const ColorModeContextProvider = ({
 	const theme = createTheme({
 		palette: {
 			mode,
-			primary: deepPurple,
-			secondary: deepOrange,
+			primary: PRIMARY_COLOR,
+			secondary: SECONDARY_COLOR,
 		},
 	});
 

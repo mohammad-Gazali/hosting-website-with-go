@@ -22,10 +22,12 @@ import AppTopBarThemeToggler from "./AppTopBarThemeToggler";
 import { useNavigate } from "react-router-dom";
 import { MouseEvent, useState } from "react";
 import {
+	BackupTable,
 	Cloud,
 	ExpandMore,
 	HelpOutline,
 	Home,
+	Language,
 	Menu as MenuIcon,
 	Phone,
 	Storage,
@@ -36,35 +38,55 @@ const AppTopBar = () => {
 	const [anchorElHosting, setAnchorElHosting] = useState<null | HTMLElement>(
 		null
 	);
+	const [anchorElServices, setAnchorElServices] = useState<null | HTMLElement>(null);
 	const [drawerOpen, setDrawerOpen] = useState(false);
-
-	const toggleDrawer = () => {
-		setDrawerOpen((prevState) => !prevState);
-	};
-
-	const open = Boolean(anchorElHosting);
+	
 	const navigate = useNavigate();
 
-	const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
+
+	const openHosting = Boolean(anchorElHosting);
+	const openServices = Boolean(anchorElServices);
+	
+
+	const handleClickHosting = (event: MouseEvent<HTMLButtonElement>) => {
 		setAnchorElHosting(event.currentTarget);
 	};
 
-	const handleClose = () => {
+	const handleCloseHosting = () => {
 		setAnchorElHosting(null);
 	};
 
-	const handleMenuItemClick = (type: "wordpress" | "cloud" | "vps") => {
+	const handleClickServices = (event: MouseEvent<HTMLButtonElement>) => {
+		setAnchorElServices(event.currentTarget);
+	};
+
+	const handleCloseServices = () => {
+		setAnchorElServices(null);
+	}
+
+	const handleMenuItemClickHosting = (type: "wordpress" | "cloud" | "vps") => {
 		return () => {
-			navigate(`/hosting/${type}`);
-			handleClose();
+			navigate(`/services/hosting/${type}`);
+			handleCloseHosting();
 		};
 	};
+
+	const handleMenuItemClickServices = (type: "domains" | "databases") => {
+		return () => {
+			navigate(`/services/${type}`);
+			handleCloseServices();
+		}
+	}
 
 	const handleListItemClick = (url: string) => {
 		return () => {
 			navigate(url);
 			setDrawerOpen(false);
 		};
+	};
+
+	const handleToggleDrawer = () => {
+		setDrawerOpen((prevState) => !prevState);
 	};
 
 	return (
@@ -101,25 +123,44 @@ const AppTopBar = () => {
 					<Box
 						sx={{ my: 2, mr: 2, display: { xs: "none", md: "flex" }, gap: 1 }}
 					>
-						<Button onClick={handleClick} color="inherit" sx={{ display: "" }}>
+						<Button onClick={handleClickHosting} color="inherit" sx={{ display: "" }}>
 							Hosting{" "}
 							<ExpandMore
-								sx={open ? { rotate: "180deg", ml: 0.5 } : { ml: 0.5 }}
+								sx={openHosting ? { rotate: "180deg", ml: 0.5 } : { ml: 0.5 }}
 							/>
 						</Button>
 						<Menu
 							anchorEl={anchorElHosting}
-							open={open}
-							onClose={handleClose}
+							open={openHosting}
+							onClose={handleCloseHosting}
 							MenuListProps={{
 								"aria-labelledby": "basic-button",
 							}}
 						>
-							<MenuItem onClick={handleMenuItemClick("wordpress")}>
+							<MenuItem onClick={handleMenuItemClickHosting("wordpress")}>
 								Wordpress
 							</MenuItem>
-							<MenuItem onClick={handleMenuItemClick("cloud")}>Cloud</MenuItem>
-							<MenuItem onClick={handleMenuItemClick("vps")}>VPS</MenuItem>
+							<MenuItem onClick={handleMenuItemClickHosting("cloud")}>Cloud</MenuItem>
+							<MenuItem onClick={handleMenuItemClickHosting("vps")}>VPS</MenuItem>
+						</Menu>
+						<Button onClick={handleClickServices} color="inherit" sx={{ display: "" }}>
+							More Services{" "}
+							<ExpandMore
+								sx={openServices ? { rotate: "180deg", ml: 0.5 } : { ml: 0.5 }}
+							/>
+						</Button>
+						<Menu
+							anchorEl={anchorElServices}
+							open={openServices}
+							onClose={handleCloseServices}
+							MenuListProps={{
+								"aria-labelledby": "basic-button",
+							}}
+						>
+							<MenuItem onClick={handleMenuItemClickServices("domains")}>
+								Domains
+							</MenuItem>
+							<MenuItem onClick={handleMenuItemClickServices("databases")}>Databases</MenuItem>
 						</Menu>
 						<Button onClick={() => navigate("/")} color="inherit">
 							Home
@@ -130,6 +171,9 @@ const AppTopBar = () => {
 						<Button onClick={() => navigate("/faq")} color="inherit">
 							FAQ
 						</Button>
+						<Button variant="outlined" color="inherit">
+							Login
+						</Button>
 					</Box>
 					<AppTopBarThemeToggler />
 				</Toolbar>
@@ -137,10 +181,10 @@ const AppTopBar = () => {
 			<Drawer
 				anchor="left"
 				open={drawerOpen}
-				onClose={toggleDrawer}
+				onClose={handleToggleDrawer}
 				ModalProps={{ disableScrollLock: true }}
 			>
-				<Box sx={{ width: 250, cursor: "pointer" }} role="presentation">
+				<Box sx={{ width: 250 }} role="presentation">
 					<Typography
 						onClick={() => {
 							navigate("/");
@@ -152,6 +196,7 @@ const AppTopBar = () => {
 						variant="h6"
 						component="h1"
 						textTransform="uppercase"
+						sx={{ cursor: "pointer" }}
 					>
 						{basic.name}
 					</Typography>
@@ -160,7 +205,7 @@ const AppTopBar = () => {
 						<ListSubheader>Hosting Services</ListSubheader>
 						<ListItem disablePadding>
 							<ListItemButton
-								onClick={handleListItemClick("/hosting/wordpress")}
+								onClick={handleListItemClick("/services/hosting/wordpress")}
 							>
 								<ListItemIcon>
 									<Web />
@@ -169,7 +214,7 @@ const AppTopBar = () => {
 							</ListItemButton>
 						</ListItem>
 						<ListItem disablePadding>
-							<ListItemButton onClick={handleListItemClick("/hosting/cloud")}>
+							<ListItemButton onClick={handleListItemClick("/services/hosting/cloud")}>
 								<ListItemIcon>
 									<Cloud />
 								</ListItemIcon>
@@ -177,11 +222,31 @@ const AppTopBar = () => {
 							</ListItemButton>
 						</ListItem>
 						<ListItem disablePadding>
-							<ListItemButton onClick={handleListItemClick("/hosting/vps")}>
+							<ListItemButton onClick={handleListItemClick("/services/hosting/vps")}>
 								<ListItemIcon>
 									<Storage />
 								</ListItemIcon>
 								<ListItemText>VPS</ListItemText>
+							</ListItemButton>
+						</ListItem>
+					</List>
+					<Divider />
+					<List>
+						<ListSubheader>Other Services</ListSubheader>
+						<ListItem disablePadding>
+							<ListItemButton onClick={handleListItemClick("/services/domains")}>
+								<ListItemIcon>
+									<Language />
+								</ListItemIcon>
+								<ListItemText>Domains</ListItemText>
+							</ListItemButton>
+						</ListItem>
+						<ListItem disablePadding>
+							<ListItemButton onClick={handleListItemClick("/services/databases")}>
+								<ListItemIcon>
+									<BackupTable />
+								</ListItemIcon>
+								<ListItemText>Databases</ListItemText>
 							</ListItemButton>
 						</ListItem>
 					</List>
@@ -210,6 +275,11 @@ const AppTopBar = () => {
 								</ListItemIcon>
 								<ListItemText>FAQ</ListItemText>
 							</ListItemButton>
+						</ListItem>
+						<ListItem>
+							<Button variant="outlined" fullWidth>
+								Login
+							</Button>
 						</ListItem>
 					</List>
 				</Box>

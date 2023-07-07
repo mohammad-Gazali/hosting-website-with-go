@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 import { AppTopBar } from "./components";
 import { Route, Routes } from "react-router-dom";
-import { Contact, FAQ, Home, HostingCloud, HostingVPS, HostingWordpress } from "./pages";
+import { Contact, FAQ, Home, HostingCloud, HostingVPS, HostingWordpress, ServiceDatabases, ServiceDomains } from "./pages";
 
 
 
@@ -9,14 +9,19 @@ function App() {
   return (
     <>
       <AppTopBar />
-      <Box sx={{ mt: 2, "> *": { minHeight: "100vh", px: { sm: "45px", xs: "29px" }} }} component="main">
+      {/* // TODO: use this for containers */}
+      {/* <Box sx={{ "> *": { minHeight: "100vh", px: { sm: "45px", xs: "29px" }} }} component="main"> */}
+
+      <Box component="main">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/faq" element={<FAQ />} />
-          <Route path="/hosting/wordpress" element={<HostingWordpress />} />
-          <Route path="/hosting/cloud" element={<HostingCloud />} />
-          <Route path="/hosting/vps" element={<HostingVPS />} />
+          <Route path="/services/hosting/wordpress" element={<HostingWordpress />} />
+          <Route path="/services/hosting/cloud" element={<HostingCloud />} />
+          <Route path="/services/hosting/vps" element={<HostingVPS />} />
+          <Route path="/services/domains" element={<ServiceDomains />} />
+          <Route path="/services/databases" element={<ServiceDatabases />} />
         </Routes>        
       </Box>
     </>

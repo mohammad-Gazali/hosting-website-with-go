@@ -1,6 +1,8 @@
 import AppTopBar from "./AppTopBar";
+import ImageWithAttribution from "./ImageWithAttribution";
 
 
 export {
-    AppTopBar
+    AppTopBar,
+    ImageWithAttribution,
 }
