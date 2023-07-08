@@ -4,27 +4,30 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/joho/godotenv"
-	
+
+	"example/hosting-website/controllers"
 	"example/hosting-website/db"
-	
+	"example/hosting-website/middlewares"
+
 	"log"
 	"os"
 )
 
 func main() {
+	var err error
+
 	// creating fiber app
 	app := fiber.New()
 
 	// loading .env file
-	errEnv := godotenv.Load("../.env")
+	err = godotenv.Load("../.env")
 
-	if errEnv != nil {
-		log.Fatal(errEnv)
+	if err != nil {
+		log.Fatal(err)
 	}
 
-
 	// initializing database instance
-	err := db.InitializeDB(os.Getenv("DATABASE_DSN"))
+	err = db.InitializeDB(os.Getenv("DATABASE_DSN"))
 
 	if err != nil {
 		log.Fatal(err)
@@ -33,10 +36,17 @@ func main() {
 	// using cors middleware
 	app.Use(cors.New())
 
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.JSON(fiber.Map{ "message": "Hi Bi" })
-	})
+	// Initializer functions
+	controllers.Init()
+
+	//? ========= Routes =========
+	// user routes
+	app.Post("/api/signup", controllers.SignUp)
+	app.Post("/api/login", controllers.Login)
+	app.Get("/api/validate", middlewares.RequireAuth, controllers.Validate)
+
+
 
 	// running the server
-	app.Listen(":8000")
+	app.Listen(":" + os.Getenv("PORT"))
 }

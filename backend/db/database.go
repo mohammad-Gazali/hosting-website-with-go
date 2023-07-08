@@ -1,6 +1,8 @@
 package db
 
 import (
+	"example/hosting-website/models"
+
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -27,6 +29,9 @@ func InitializeDB(dsn string) error {
     if err != nil {
         return err
     }
+
+	// for auto migration for models
+	DB.AutoMigrate(&models.User{})
 
     return nil
 }

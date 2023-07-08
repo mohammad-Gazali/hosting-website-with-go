@@ -33,20 +33,20 @@ import {
 	Storage,
 	Web,
 } from "@mui/icons-material";
+import AppTopBarAuthModel from "./AppTopBarAuthModel";
+
+
 
 const AppTopBar = () => {
-	const [anchorElHosting, setAnchorElHosting] = useState<null | HTMLElement>(
-		null
-	);
+	const [anchorElHosting, setAnchorElHosting] = useState<null | HTMLElement>(null);
 	const [anchorElServices, setAnchorElServices] = useState<null | HTMLElement>(null);
 	const [drawerOpen, setDrawerOpen] = useState(false);
+	const [openModel, setOpenModel] = useState(false);
 	
 	const navigate = useNavigate();
 
-
 	const openHosting = Boolean(anchorElHosting);
 	const openServices = Boolean(anchorElServices);
-	
 
 	const handleClickHosting = (event: MouseEvent<HTMLButtonElement>) => {
 		setAnchorElHosting(event.currentTarget);
@@ -88,6 +88,10 @@ const AppTopBar = () => {
 	const handleToggleDrawer = () => {
 		setDrawerOpen((prevState) => !prevState);
 	};
+
+	const handleOpenModel = () => setOpenModel(true);
+
+	const handleCloseModel = () => setOpenModel(false);
 
 	return (
 		<AppBar component="header" position="sticky">
@@ -171,7 +175,7 @@ const AppTopBar = () => {
 						<Button onClick={() => navigate("/faq")} color="inherit">
 							FAQ
 						</Button>
-						<Button variant="outlined" color="inherit">
+						<Button variant="outlined" color="inherit" onClick={handleOpenModel}>
 							Login
 						</Button>
 					</Box>
@@ -277,13 +281,14 @@ const AppTopBar = () => {
 							</ListItemButton>
 						</ListItem>
 						<ListItem>
-							<Button variant="outlined" fullWidth>
+							<Button variant="outlined" fullWidth onClick={handleOpenModel}>
 								Login
 							</Button>
 						</ListItem>
 					</List>
 				</Box>
 			</Drawer>
+			<AppTopBarAuthModel open={openModel} handleClose={handleCloseModel} />
 		</AppBar>
 	);
 };

@@ -11,7 +11,6 @@ function App() {
       <AppTopBar />
       {/* // TODO: use this for containers */}
       {/* <Box sx={{ "> *": { minHeight: "100vh", px: { sm: "45px", xs: "29px" }} }} component="main"> */}
-
       <Box component="main">
         <Routes>
           <Route path="/" element={<Home />} />
