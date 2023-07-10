@@ -69,7 +69,11 @@ func SignUp(c *fiber.Ctx) error {
 
 	// Do: Success Response
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
-		"message": "User created successfully",
+		"user": fiber.Map{
+			"id": user.ID,
+			"email": user.Email,
+			"name": user.Name,
+		},
 	})
 }
 
@@ -136,20 +140,23 @@ func Login(c *fiber.Ctx) error {
 		SameSite: string(rune(http.SameSiteLaxMode)),
 		Name: "Authorization",
 		Value: tokenString,
-		MaxAge: 3600 * 24 * 30,
-		Path: "",
-		Domain: "",
-		Secure: true,
+		MaxAge: 3600 * 24 * 30, // 30 day
 		HTTPOnly: true,
 	})
 
 
 	// Do: success
-	return c.SendStatus(fiber.StatusOK)
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"user": fiber.Map{
+			"id": user.ID,
+			"email": user.Email,
+			"name": user.Name,
+		},
+	})
 }
 
 
-func Validate(c *fiber.Ctx) error {
+func User(c *fiber.Ctx) error {
 	var user map[string]interface{}
 	
 	userHeader := c.GetRespHeader("user")
@@ -161,4 +168,19 @@ func Validate(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{
 		"user": user,
 	})
+}
+
+
+func Logout(c *fiber.Ctx) error {
+
+	// Do: remove the cookie
+	// Note: here we remove the cookie by setting its expire time in the past time
+	c.Cookie(&fiber.Cookie{
+		Name: "Authorization",
+		Value: "",
+		Expires: time.Now().Add(-time.Hour),  //| expire time = before hour from now
+		HTTPOnly: true,
+	})
+
+	return c.SendStatus(fiber.StatusOK)
 }

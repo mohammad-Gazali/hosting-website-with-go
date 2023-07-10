@@ -3,12 +3,13 @@ package middlewares
 import (
 	"example/hosting-website/db"
 	"example/hosting-website/models"
+	
+	"github.com/gofiber/fiber/v2"
+	"github.com/golang-jwt/jwt/v5"
+	
 	"fmt"
 	"os"
 	"time"
-
-	"github.com/gofiber/fiber/v2"
-	"github.com/golang-jwt/jwt/v5"
 )
 
 

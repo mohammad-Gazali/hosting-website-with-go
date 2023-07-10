@@ -1,6 +1,6 @@
 import { Box, Typography, Container, useMediaQuery, useTheme } from "@mui/material"
 import { basic } from "../../constants"
-import { PRIMARY_COLOR } from "../../context/ColorModeContext"
+import { PRIMARY_COLOR } from "../../main";
 import { ImageWithAttribution } from "../../components"
 import HeroImage from "../../assets/hero_home_page.svg";
 

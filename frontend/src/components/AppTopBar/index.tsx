@@ -1,5 +1,6 @@
 import {
 	AppBar,
+	Avatar,
 	Box,
 	Button,
 	Container,
@@ -16,9 +17,9 @@ import {
 	MenuItem,
 	Toolbar,
 	Typography,
+	useTheme,
 } from "@mui/material";
 import { basic } from "../../constants";
-import AppTopBarThemeToggler from "./AppTopBarThemeToggler";
 import { useNavigate } from "react-router-dom";
 import { MouseEvent, useState } from "react";
 import {
@@ -34,6 +35,7 @@ import {
 	Web,
 } from "@mui/icons-material";
 import AppTopBarAuthModel from "./AppTopBarAuthModel";
+import { useAuth } from "../../context/AuthContext";
 
 
 
@@ -47,6 +49,10 @@ const AppTopBar = () => {
 
 	const openHosting = Boolean(anchorElHosting);
 	const openServices = Boolean(anchorElServices);
+
+	const { currentUser } = useAuth();
+
+	const theme = useTheme();
 
 	const handleClickHosting = (event: MouseEvent<HTMLButtonElement>) => {
 		setAnchorElHosting(event.currentTarget);
@@ -175,11 +181,16 @@ const AppTopBar = () => {
 						<Button onClick={() => navigate("/faq")} color="inherit">
 							FAQ
 						</Button>
-						<Button variant="outlined" color="inherit" onClick={handleOpenModel}>
-							Login
-						</Button>
+						{
+							currentUser === null
+							?
+							<Button variant="outlined" color="inherit" onClick={handleOpenModel}>
+								Login
+							</Button>
+							:
+							<Avatar sx={{ bgcolor: theme.palette.secondary.light }} alt={currentUser.name}>{currentUser.name[0].toUpperCase()}</Avatar>
+						}
 					</Box>
-					<AppTopBarThemeToggler />
 				</Toolbar>
 			</Container>
 			<Drawer
@@ -204,6 +215,30 @@ const AppTopBar = () => {
 					>
 						{basic.name}
 					</Typography>
+					{
+						currentUser !== null
+						?
+						<>
+						<Divider />
+						<List>
+							<ListItem disablePadding>
+								<ListItemButton>
+									<ListItemIcon>
+										<Avatar sx={{ bgcolor: theme.palette.secondary.light }} alt={currentUser.name}>{currentUser.name[0].toUpperCase()}</Avatar>
+									</ListItemIcon>
+									<ListItemText>
+										{currentUser.name}<br />
+										<Typography lineHeight={1.2} fontWeight="bold" color="GrayText">
+											{currentUser.email}
+										</Typography>
+									</ListItemText>
+								</ListItemButton>
+							</ListItem>
+						</List>
+						</>
+						:
+						null
+					}
 					<Divider />
 					<List>
 						<ListSubheader>Hosting Services</ListSubheader>
@@ -280,11 +315,17 @@ const AppTopBar = () => {
 								<ListItemText>FAQ</ListItemText>
 							</ListItemButton>
 						</ListItem>
-						<ListItem>
-							<Button variant="outlined" fullWidth onClick={handleOpenModel}>
-								Login
-							</Button>
-						</ListItem>
+						{
+							currentUser === null
+							?
+							<ListItem>
+								<Button variant="outlined" fullWidth onClick={handleOpenModel}>
+									Login
+								</Button>
+							</ListItem>
+							:
+							null
+						}
 					</List>
 				</Box>
 			</Drawer>

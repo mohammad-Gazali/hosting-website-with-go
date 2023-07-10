@@ -7,7 +7,6 @@ import (
 
 	"example/hosting-website/controllers"
 	"example/hosting-website/db"
-	"example/hosting-website/middlewares"
 
 	"log"
 	"os"
@@ -32,19 +31,21 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-
+	
 	// using cors middleware
-	app.Use(cors.New())
+	app.Use(cors.New(cors.Config{
+		AllowCredentials: true,  //| this option is neccessary to send the cookie to the frontend, and make frontend able to send it back
+        AllowOrigins: os.Getenv("FRONTEND_LOCAL_HOST"),
+		AllowHeaders: "Origin,Content-Type,Accept,Content-Length,Accept-Language,Accept-Encoding,Connection,Access-Control-Allow-Origin",
+	}))
 
+	
 	// Initializer functions
 	controllers.Init()
 
-	//? ========= Routes =========
-	// user routes
-	app.Post("/api/signup", controllers.SignUp)
-	app.Post("/api/login", controllers.Login)
-	app.Get("/api/validate", middlewares.RequireAuth, controllers.Validate)
 
+	// Setup App Routes
+	SetupRoutes(app)	
 
 
 	// running the server

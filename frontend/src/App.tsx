@@ -2,13 +2,16 @@ import { Box } from "@mui/material";
 import { AppTopBar } from "./components";
 import { Route, Routes } from "react-router-dom";
 import { Contact, FAQ, Home, HostingCloud, HostingVPS, HostingWordpress, ServiceDatabases, ServiceDomains } from "./pages";
+import { AuthProvider } from "./context/AuthContext";
 
 
 
 function App() {
   return (
     <>
-      <AppTopBar />
+      <AuthProvider>
+        <AppTopBar />
+      </AuthProvider>
       {/* // TODO: use this for containers */}
       {/* <Box sx={{ "> *": { minHeight: "100vh", px: { sm: "45px", xs: "29px" }} }} component="main"> */}
       <Box component="main">
