@@ -1,17 +1,23 @@
+import { Box, Container } from "@mui/material";
+import HomeHero from "./HomeHero";
+import HomeServices from "./HomeServices";
+import HomeSecuritySection from "./HomeSecuritySection";
+import HomeNumbersSection from "./HomeNumbersSection";
+import HomeSponsorsSection from "./HomeSponsorsSection";
 
-import { Button } from "@mui/material"
-import HomeHero from "./HomeHero"
-import axios from "axios";
 
 
 const Home = () => {
   return (
-    <div>
+    <Box>
       <HomeHero />
-      <Button variant="contained" onClick={() => axios.get("http://localhost:8000/api/validate")}>
-        Send Validate
-      </Button>
-    </div>
+      <Container sx={{ "> *": { py: 8 } }}>
+        <HomeServices />
+        <HomeSecuritySection />
+        <HomeNumbersSection />
+        <HomeSponsorsSection />
+      </Container>
+    </Box>
   )
 }
 

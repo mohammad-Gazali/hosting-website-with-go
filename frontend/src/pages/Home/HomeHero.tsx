@@ -10,14 +10,15 @@ const HomeHero = () => {
 
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up("md"));
+  const matchesSmaller = useMediaQuery(theme.breakpoints.up("sm"));
 
   return (
-    <Box sx={{ display: "flex", minHeight: "65vh", px: { sm: "45px", xs: "29px" }, backgroundColor: PRIMARY_COLOR[50] }}>
+    <Box component="section" sx={{ display: "flex", minHeight: "65vh", px: { sm: "45px", xs: "29px" }, backgroundColor: PRIMARY_COLOR[50] }}>
         <Container sx={{ display: "flex", justifyContent: "center", py: 2 }}>
           <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center" }}>
             <Box textAlign={matches ? "left" : "center"} mb={1}>
-                <Typography display="inline-block" component="h1" variant={matches ? "h2" : "h3"} color="secondary" fontFamily="Open Sans" textTransform="uppercase">{basic.name}</Typography>{" "}
-                <Typography display="inline-block" component="h1" variant={matches ? "h2" : "h3"} fontWeight={700} ml={2}>
+                <Typography display="inline-block" component="h1" variant={matches ? "h2" : matchesSmaller ? "h3" : "h4"} color="secondary" fontFamily="Open Sans" textTransform="uppercase">{basic.name}</Typography>{" "}
+                <Typography display="inline-block" component="h1" variant={matches ? "h2" : matchesSmaller ? "h3" : "h4"} fontWeight={700} ml={matchesSmaller ? 2 : 1}>
                     Hosting
                 </Typography>
             </Box>
