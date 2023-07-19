@@ -6,7 +6,7 @@ import HeroImage from "../../assets/hero_home_page.svg";
 
 
 
-const HomeHero = () => {
+const HomeHeroSection = () => {
 
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up("md"));
@@ -32,4 +32,4 @@ const HomeHero = () => {
   )
 }
 
-export default HomeHero
+export default HomeHeroSection;

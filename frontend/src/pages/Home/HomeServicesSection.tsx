@@ -1,15 +1,16 @@
-import { Box, Grid, Typography } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import { services } from "../../constants";
 import HomeServiceCard from "./HomeServiceCard";
+import { SectionTitle } from "../../components";
 
 
 
-const HomeServices = () => {
+const HomeServicesSection = () => {
 	return (
         <Box component="section">
-            <Typography textTransform="uppercase" color="primary" fontWeight="bold" variant="h4" gutterBottom>
-                Our Services
-            </Typography>
+            <SectionTitle>
+                Services
+            </SectionTitle>
             <br />
             <Grid spacing={2} container>
                 {services.map((service) => {
@@ -24,4 +25,4 @@ const HomeServices = () => {
 	);
 };
 
-export default HomeServices;
+export default HomeServicesSection;

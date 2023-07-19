@@ -1,22 +1,26 @@
 import { Box, Container } from "@mui/material";
-import HomeHero from "./HomeHero";
-import HomeServices from "./HomeServices";
+import HomeHeroSection from "./HomeHeroSection";
+import HomeServicesSection from "./HomeServicesSection";
 import HomeSecuritySection from "./HomeSecuritySection";
 import HomeNumbersSection from "./HomeNumbersSection";
 import HomeSponsorsSection from "./HomeSponsorsSection";
+import HomeTestimonialsSection from "./HomeTestimonialsSection";
+import { AppFooter } from "../../components";
 
 
 
 const Home = () => {
   return (
     <Box>
-      <HomeHero />
+      <HomeHeroSection />
       <Container sx={{ "> *": { py: 8 } }}>
-        <HomeServices />
+        <HomeServicesSection />
         <HomeSecuritySection />
         <HomeNumbersSection />
         <HomeSponsorsSection />
+        <HomeTestimonialsSection />
       </Container>
+      <AppFooter />
     </Box>
   )
 }
