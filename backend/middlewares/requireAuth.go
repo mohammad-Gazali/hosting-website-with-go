@@ -49,7 +49,7 @@ func RequireAuth(c *fiber.Ctx) error {
 			return c.SendStatus(fiber.StatusBadRequest)
 		}
 
-		// Do: Attach to req
+		// Do: Attach to req and add new header "user" hold user's data
 		c.Set("user", user.ToJson())
 
 

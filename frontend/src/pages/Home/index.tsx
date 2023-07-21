@@ -5,7 +5,6 @@ import HomeSecuritySection from "./HomeSecuritySection";
 import HomeNumbersSection from "./HomeNumbersSection";
 import HomeSponsorsSection from "./HomeSponsorsSection";
 import HomeTestimonialsSection from "./HomeTestimonialsSection";
-import { AppFooter } from "../../components";
 
 
 
@@ -20,7 +19,6 @@ const Home = () => {
         <HomeSponsorsSection />
         <HomeTestimonialsSection />
       </Container>
-      <AppFooter />
     </Box>
   )
 }

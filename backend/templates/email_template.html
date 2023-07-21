@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.Subject}}</title>
+    <style>
+        *, *::after, *::before {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            padding: 1rem;
+            background-color: #ede7f6;
+        }
+
+        h1 {
+            font-size: 1.2rem;
+        }
+
+        hr {
+            margin-top: 0.6rem;
+            margin-bottom: 1.4rem;
+            border-color: #673ab7;
+        }
+
+        p {
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <h1>Email: &nbsp;&nbsp;&nbsp;&nbsp;{{.Email}}</h1>
+    <h1>Name:  &nbsp;&nbsp;&nbsp;{{.Name}}</h1>
+    <hr>
+    <p>{{.Message}}</p>
+</body>
+</html>

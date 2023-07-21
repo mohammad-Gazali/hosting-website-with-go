@@ -3,6 +3,7 @@ import services from "./services";
 import numbers from "./numbers";
 import sponsors from "./sponsors";
 import testimonials from "./testimonials";
+import questions from "./questions";
 
 
 export {
@@ -11,4 +12,5 @@ export {
     numbers,
     sponsors,
     testimonials,
+    questions,
 }

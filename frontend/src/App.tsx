@@ -1,10 +1,10 @@
 import { Box } from "@mui/material";
-import { AppTopBar } from "./components";
+import { AppFooter, AppTopBar } from "./components";
 import { Route, Routes } from "react-router-dom";
 import { Contact, FAQ, Home, HostingCloud, HostingVPS, HostingWordpress, ServiceDatabases, ServiceDomains } from "./pages";
 import { AuthProvider } from "./context/AuthContext";
 
-
+// TODO: add logout to the app
 
 function App() {
   return (
@@ -12,8 +12,6 @@ function App() {
       <AuthProvider>
         <AppTopBar />
       </AuthProvider>
-      {/* // TODO: use this for containers */}
-      {/* <Box sx={{ "> *": { minHeight: "100vh", px: { sm: "45px", xs: "29px" }} }} component="main"> */}
       <Box component="main">
         <Routes>
           <Route path="/" element={<Home />} />
@@ -24,8 +22,9 @@ function App() {
           <Route path="/services/hosting/vps" element={<HostingVPS />} />
           <Route path="/services/domains" element={<ServiceDomains />} />
           <Route path="/services/databases" element={<ServiceDatabases />} />
-        </Routes>        
+        </Routes>
       </Box>
+      <AppFooter />
     </>
   )
 }

@@ -15,4 +15,7 @@ func SetupRoutes(app *fiber.App) {
 	app.Post("/api/login", controllers.Login)
 	app.Get("/api/user", middlewares.RequireAuth, controllers.User)
 	app.Get("/api/logout", controllers.Logout)
+
+	// send email
+	app.Post("/api/send-email", middlewares.RequireAuth, controllers.SendEmail)
 }

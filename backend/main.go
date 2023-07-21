@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/joho/godotenv"
 
 	"example/hosting-website/controllers"
@@ -38,6 +39,9 @@ func main() {
         AllowOrigins: os.Getenv("FRONTEND_LOCAL_HOST"),
 		AllowHeaders: "Origin,Content-Type,Accept,Content-Length,Accept-Language,Accept-Encoding,Connection,Access-Control-Allow-Origin",
 	}))
+
+	// using logger middleware for logging HTTP requests/responses details
+	app.Use(logger.New())
 
 	
 	// Initializer functions
