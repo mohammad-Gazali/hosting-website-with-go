@@ -3,6 +3,7 @@ package controllers
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"html/template"
 	"net/smtp"
 	"os"
@@ -71,27 +72,46 @@ func SendEmail(c *fiber.Ctx) error {
 	err = tmpl.Execute(buf, emailData)
 
 	if err != nil {
-
 		return fiber.ErrInternalServerError
 	}
-
-	msg := buf.Bytes()
 
 	smtpHost := os.Getenv("EMAIL_HOST")
 	smtpPort := os.Getenv("EMAIL_PORT")
 	smtpUsername := os.Getenv("EMAIL_HOST_USERNAME")
 	smtpEmailPassword := os.Getenv("EMAIL_HOST_PASSWORD")
 
-	senderEmail := user["email"]
+	senderEmail := user["email"].(string)
 	receiverEmail := os.Getenv("SUPPORT_EMAIL")
+
+	msg := makeMessage(receiverEmail, senderEmail, body.Subject, buf.String())
 
 	// SMTP authentication.
 	auth := smtp.PlainAuth("", smtpUsername, smtpEmailPassword, smtpHost)
 
-	if err := smtp.SendMail(smtpHost+":"+smtpPort, auth, senderEmail.(string), []string{receiverEmail}, msg); err != nil {
+	if err := smtp.SendMail(smtpHost+":"+smtpPort, auth, senderEmail, []string{receiverEmail}, []byte(msg)); err != nil {
 
 		return fiber.ErrInternalServerError
 	}
 
 	return c.SendStatus(fiber.StatusOK)
+}
+
+
+
+// utils
+func makeMessage(to, from, subject, body string) string {
+	headers := make(map[string]string)
+	message := ""
+
+	headers["To"] = to
+	headers["From"] = from
+	headers["Subject"] = subject
+	headers["Content-Type"] = "text/html; charset=\"utf-8\""
+
+	for key, value := range headers {
+        message += fmt.Sprintf("%s: %s\r\n", key, value)
+    }
+    message += "\r\n" + body
+
+	return message
 }
