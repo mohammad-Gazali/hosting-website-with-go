@@ -148,7 +148,7 @@ const AppTopBar = () => {
 							}}
 						>
 							<MenuItem onClick={handleMenuItemClickHosting("wordpress")}>
-								Wordpress
+								WordPress
 							</MenuItem>
 							<MenuItem onClick={handleMenuItemClickHosting("cloud")}>Cloud</MenuItem>
 							<MenuItem onClick={handleMenuItemClickHosting("vps")}>VPS</MenuItem>
@@ -249,7 +249,7 @@ const AppTopBar = () => {
 								<ListItemIcon>
 									<Web />
 								</ListItemIcon>
-								<ListItemText>Wordpress</ListItemText>
+								<ListItemText>WordPress</ListItemText>
 							</ListItemButton>
 						</ListItem>
 						<ListItem disablePadding>

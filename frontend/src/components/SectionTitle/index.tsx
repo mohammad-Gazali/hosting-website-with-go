@@ -1,6 +1,6 @@
 import { Typography, useMediaQuery, useTheme } from "@mui/material";
 
-const SectionTitle = ({ children }: { children: string }) => {
+const SectionTitle = ({ children }: { children: string | string[] }) => {
 	const theme = useTheme();
 	const matches = useMediaQuery(theme.breakpoints.up("md"));
 	const matchesSmaller = useMediaQuery(theme.breakpoints.up("sm"));
@@ -9,7 +9,6 @@ const SectionTitle = ({ children }: { children: string }) => {
 		<Typography
 			textTransform="uppercase"
 			color="primary"
-			fontWeight="bold"
 			variant={matches ? "h4" : matchesSmaller ? "h5" : "h6"}
 			gutterBottom
 		>

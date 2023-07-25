@@ -1,6 +1,15 @@
+import { Box, Container } from "@mui/material"
+import ServiceDomainsIntroSection from "./ServiceDomainsIntroSection"
+import ServiceDomainsFeaturesSection from "./ServiceDomainsFeaturesSection"
+
 const ServiceDomains = () => {
   return (
-    <div>ServiceDomains</div>
+    <Box>
+      <ServiceDomainsIntroSection />
+      <Container sx={{ "> *": { py: 8 } }}>
+        <ServiceDomainsFeaturesSection />
+      </Container>
+    </Box>
   )
 }
 

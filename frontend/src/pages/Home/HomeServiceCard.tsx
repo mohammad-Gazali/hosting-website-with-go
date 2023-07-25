@@ -1,4 +1,4 @@
-import { Button, Card, CardActions, CardContent, CardMedia, Typography } from "@mui/material";
+import { Button, Card, CardActions, CardContent, CardMedia, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { Service } from "../../constants/services";
 import { PRIMARY_COLOR } from "../../main";
 import { useNavigate } from "react-router-dom";
@@ -10,6 +10,8 @@ interface HomeServiceCardProps {
 const HomeServiceCard = ({ service }: HomeServiceCardProps) => {
 
     const navigate = useNavigate();
+    const theme = useTheme();
+    const matches = useMediaQuery(theme.breakpoints.up("sm"));
     
 	return (
 		<Card>
@@ -21,15 +23,15 @@ const HomeServiceCard = ({ service }: HomeServiceCardProps) => {
                 />
             </CardMedia>
             <CardContent>
-                <Typography gutterBottom variant="h5">
+                <Typography gutterBottom variant={matches ? "h5" : "h6"}>
                     {service.title}
                 </Typography>
-                <Typography color="text.secondary">
+                <Typography color="text.secondary" variant={matches ? "body1" : "body2"}>
                     {service.content}
                 </Typography>
             </CardContent>
             <CardActions>
-                <Button onClick={() => navigate(service.link)}>More Details</Button>
+                <Button onClick={() => navigate(service.link)} size={matches ? "medium" : "small"}>More Details</Button>
             </CardActions>
         </Card>
 	);

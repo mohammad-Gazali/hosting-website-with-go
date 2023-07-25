@@ -4,6 +4,8 @@ import {
 	AccordionSummary,
 	Box,
 	Typography,
+	useMediaQuery,
+	useTheme,
 } from "@mui/material";
 import SecureImage from "../../assets/secure_data.svg";
 import { ImageWithAttribution } from "../../components";
@@ -21,6 +23,9 @@ const HomeSecuritySection = () => {
 			setExpanded(isExpanded ? panel : false);
 		};
 
+	const theme = useTheme();
+	const matches = useMediaQuery(theme.breakpoints.up("sm"));
+
 	return (
 		<Box sx={{ display: "flex", gap: 2 }} component="section">
 			<ImageWithAttribution
@@ -33,14 +38,14 @@ const HomeSecuritySection = () => {
 				onlyBig
 			/>
 			<Box>
-				<Typography gutterBottom>
+				<Typography variant={matches ? "body1" : "body2"} gutterBottom>
 					We take security seriously. That's why we offer secure hosting as a
 					standard feature on all of our hosting plans. Our secure hosting
 					includes a number of measures to protect your website and your data
 					from cyber threats and data breaches.
 				</Typography>
 				<br />
-				<Typography color="primary" fontWeight="bold">
+				<Typography color="primary" fontWeight="bold" gutterBottom variant={matches ? "body1" : "body2"}>
 					Our secure hosting includes:
 				</Typography>
 				<Accordion
@@ -55,10 +60,10 @@ const HomeSecuritySection = () => {
 						expandIcon={<ExpandMore />}
 						aria-controls="panel1a-content"
 					>
-						<Typography fontWeight="bold">SSL (Secure Sockets Layer) certificates</Typography>
+						<Typography variant={matches ? "body1" : "body2"}>SSL (Secure Sockets Layer) certificates</Typography>
 					</AccordionSummary>
 					<AccordionDetails>
-						<Typography color="text.secondary">
+						<Typography color="text.secondary" variant={matches ? "body1" : "body2"}>
 							These encrypt data transmitted between your website and visitors'
 							browsers to protect against man-in-the-middle attacks.
 						</Typography>
@@ -76,10 +81,10 @@ const HomeSecuritySection = () => {
 						expandIcon={<ExpandMore />}
 						aria-controls="panel2a-content"
 					>
-						<Typography fontWeight="bold">Firewalls</Typography>
+						<Typography variant={matches ? "body1" : "body2"}>Firewalls</Typography>
 					</AccordionSummary>
 					<AccordionDetails>
-						<Typography color="text.secondary">
+						<Typography color="text.secondary" variant={matches ? "body1" : "body2"}>
 							We use advanced firewalls to block unauthorized access and protect
 							against cyber threats.
 						</Typography>
@@ -97,12 +102,12 @@ const HomeSecuritySection = () => {
 						expandIcon={<ExpandMore />}
 						aria-controls="panel3a-content"
 					>
-						<Typography fontWeight="bold">
+						<Typography variant={matches ? "body1" : "body2"}>
 							DDoS (Distributed Denial of Service) protection
 						</Typography>
 					</AccordionSummary>
 					<AccordionDetails>
-						<Typography color="text.secondary">
+						<Typography color="text.secondary" variant={matches ? "body1" : "body2"}>
 							Our DDoS protection measures protect against attacks that aim to
 							take down your website by overwhelming it with traffic.
 						</Typography>
