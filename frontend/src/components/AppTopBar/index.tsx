@@ -20,15 +20,17 @@ import {
 	useTheme,
 } from "@mui/material";
 import { basic } from "../../constants";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { MouseEvent, useState } from "react";
 import {
 	BackupTable,
 	Cloud,
+	Dashboard,
 	ExpandMore,
 	HelpOutline,
 	Home,
 	Language,
+	Logout,
 	Menu as MenuIcon,
 	Phone,
 	Storage,
@@ -36,21 +38,27 @@ import {
 } from "@mui/icons-material";
 import AppTopBarAuthModel from "./AppTopBarAuthModel";
 import { useAuth } from "../../context/AuthContext";
-
-
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import { API_LOGOUT_ROUTE } from "../../api-routes";
 
 const AppTopBar = () => {
-	const [anchorElHosting, setAnchorElHosting] = useState<null | HTMLElement>(null);
-	const [anchorElServices, setAnchorElServices] = useState<null | HTMLElement>(null);
+	const [anchorElHosting, setAnchorElHosting] = useState<null | HTMLElement>(
+		null
+	);
+	const [anchorElServices, setAnchorElServices] = useState<null | HTMLElement>(
+		null
+	);
+	const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
+
 	const [drawerOpen, setDrawerOpen] = useState(false);
-	const [openModel, setOpenModel] = useState(false);
-	
-	const navigate = useNavigate();
+	const [openModal, setOpenModal] = useState(false);
 
 	const openHosting = Boolean(anchorElHosting);
 	const openServices = Boolean(anchorElServices);
+	const openUser = Boolean(anchorElUser);
 
-	const { currentUser } = useAuth();
+	const { currentUser, removeCurrentUser } = useAuth();
 
 	const theme = useTheme();
 
@@ -68,36 +76,47 @@ const AppTopBar = () => {
 
 	const handleCloseServices = () => {
 		setAnchorElServices(null);
-	}
-
-	const handleMenuItemClickHosting = (type: "wordpress" | "cloud" | "vps") => {
-		return () => {
-			navigate(`/services/hosting/${type}`);
-			handleCloseHosting();
-		};
 	};
 
-	const handleMenuItemClickServices = (type: "domains" | "databases") => {
-		return () => {
-			navigate(`/services/${type}`);
-			handleCloseServices();
-		}
-	}
+	const handleClickUser = (event: MouseEvent<HTMLDivElement>) => {
+		setAnchorElUser(event.currentTarget);
+	};
 
-	const handleListItemClick = (url: string) => {
-		return () => {
-			navigate(url);
-			setDrawerOpen(false);
-		};
+	const handleCloseUser = () => {
+		setAnchorElUser(null);
 	};
 
 	const handleToggleDrawer = () => {
 		setDrawerOpen((prevState) => !prevState);
 	};
 
-	const handleOpenModel = () => setOpenModel(true);
+	const handleopenModal = () => setOpenModal(true);
 
-	const handleCloseModel = () => setOpenModel(false);
+	const handleCloseModel = () => setOpenModal(false);
+
+	const handleCloseDrawer = () => setDrawerOpen(false);
+
+	const { refetch: logout } = useQuery({
+		queryKey: ["auth-logout"],
+		enabled: false,
+		queryFn: async () => {
+
+			// TODO: handle waiting state
+
+			await axios.get(API_LOGOUT_ROUTE, {
+				withCredentials: true,
+			})
+			.then(() => removeCurrentUser())
+			.then(() => { /* // TODO: disable loading */ })
+			.catch(/* // TODO: handle error state */);
+
+			return null;
+		},
+	})
+
+	const handleLogout = () => {
+		logout();
+	};
 
 	return (
 		<AppBar component="header" position="sticky">
@@ -111,7 +130,17 @@ const AppTopBar = () => {
 					>
 						<MenuIcon />
 					</IconButton>
-					<Box sx={{ cursor: "pointer", display: "flex", mr: "auto" }} onClick={() => navigate("/")}>
+					<Box
+						sx={{
+							cursor: "pointer",
+							display: "flex",
+							mr: "auto",
+							color: "primary.contrastText",
+							textDecoration: "none",
+						}}
+						component={Link}
+						to="/"
+					>
 						<Box
 							sx={{
 								mr: 2,
@@ -133,7 +162,11 @@ const AppTopBar = () => {
 					<Box
 						sx={{ my: 2, mr: 2, display: { xs: "none", md: "flex" }, gap: 1 }}
 					>
-						<Button onClick={handleClickHosting} color="inherit" sx={{ display: "" }}>
+						<Button
+							onClick={handleClickHosting}
+							color="inherit"
+							sx={{ display: "" }}
+						>
 							Hosting{" "}
 							<ExpandMore
 								sx={openHosting ? { rotate: "180deg", ml: 0.5 } : { ml: 0.5 }}
@@ -147,13 +180,33 @@ const AppTopBar = () => {
 								"aria-labelledby": "basic-button",
 							}}
 						>
-							<MenuItem onClick={handleMenuItemClickHosting("wordpress")}>
+							<MenuItem
+								component={Link}
+								to="/services/hosting/wordpress"
+								onClick={handleCloseHosting}
+							>
 								WordPress
 							</MenuItem>
-							<MenuItem onClick={handleMenuItemClickHosting("cloud")}>Cloud</MenuItem>
-							<MenuItem onClick={handleMenuItemClickHosting("vps")}>VPS</MenuItem>
+							<MenuItem
+								component={Link}
+								to="/services/hosting/cloud"
+								onClick={handleCloseHosting}
+							>
+								Cloud
+							</MenuItem>
+							<MenuItem
+								component={Link}
+								to="/services/hosting/vps"
+								onClick={handleCloseHosting}
+							>
+								VPS
+							</MenuItem>
 						</Menu>
-						<Button onClick={handleClickServices} color="inherit" sx={{ display: "" }}>
+						<Button
+							onClick={handleClickServices}
+							color="inherit"
+							sx={{ display: "" }}
+						>
 							More Services{" "}
 							<ExpandMore
 								sx={openServices ? { rotate: "180deg", ml: 0.5 } : { ml: 0.5 }}
@@ -167,29 +220,70 @@ const AppTopBar = () => {
 								"aria-labelledby": "basic-button",
 							}}
 						>
-							<MenuItem onClick={handleMenuItemClickServices("domains")}>
+							<MenuItem
+								component={Link}
+								to="/services/domains"
+								onClick={handleCloseServices}
+							>
 								Domains
 							</MenuItem>
-							<MenuItem onClick={handleMenuItemClickServices("databases")}>Databases</MenuItem>
+							<MenuItem
+								component={Link}
+								to="/services/databases"
+								onClick={handleCloseServices}
+							>
+								Databases
+							</MenuItem>
 						</Menu>
-						<Button onClick={() => navigate("/")} color="inherit">
+						<Button component={Link} to="/" color="inherit">
 							Home
 						</Button>
-						<Button onClick={() => navigate("/contact")} color="inherit">
+						<Button component={Link} to="/contact" color="inherit">
 							Contact
 						</Button>
-						<Button onClick={() => navigate("/faq")} color="inherit">
+						<Button component={Link} to="/faq" color="inherit">
 							FAQ
 						</Button>
-						{
-							currentUser === null
-							?
-							<Button variant="outlined" color="inherit" onClick={handleOpenModel}>
+						{currentUser === null ? (
+							<Button
+								variant="outlined"
+								color="inherit"
+								onClick={handleopenModal}
+							>
 								Login
 							</Button>
-							:
-							<Avatar sx={{ bgcolor: theme.palette.secondary.light }} alt={currentUser.name}>{currentUser.name[0].toUpperCase()}</Avatar>
-						}
+						) : (
+							<>
+								<Avatar
+									sx={{
+										bgcolor: theme.palette.secondary.light,
+										cursor: "pointer",
+									}}
+									alt={currentUser.name}
+									onClick={handleClickUser}
+								>
+									{currentUser.name[0].toUpperCase()}
+								</Avatar>
+								<Menu
+									anchorEl={anchorElUser}
+									autoFocus={false}
+									open={openUser}
+									onClose={handleCloseUser}
+									MenuListProps={{
+										"aria-labelledby": "basic-button",
+									}}
+								>
+									<MenuItem
+										component={Link}
+										to="/dashboard"
+										onClick={handleCloseUser}
+									>
+										Dashboard
+									</MenuItem>
+									<MenuItem onClick={handleLogout}>Log out</MenuItem>
+								</Menu>
+							</>
+						)}
 					</Box>
 				</Toolbar>
 			</Container>
@@ -200,51 +294,86 @@ const AppTopBar = () => {
 				ModalProps={{ disableScrollLock: true }}
 			>
 				<Box sx={{ width: 250 }} role="presentation">
-					<Typography
-						onClick={() => {
-							navigate("/");
-							setDrawerOpen(false);
-						}}
-						my={2}
-						ml={4}
-						fontFamily="Open Sans"
-						variant="h6"
-						component="h1"
-						textTransform="uppercase"
-						sx={{ cursor: "pointer" }}
+					<Box
+						onClick={handleCloseDrawer}
+						component={Link}
+						to="/"
+						sx={{ textDecoration: "none", color: "inherit" }}
 					>
-						{basic.name}
-					</Typography>
-					{
-						currentUser !== null
-						?
+						<Typography
+							my={2}
+							ml={4}
+							fontFamily="Open Sans"
+							variant="h6"
+							component="h1"
+							textTransform="uppercase"
+							sx={{ cursor: "pointer" }}
+						>
+							{basic.name}
+						</Typography>
+					</Box>
+					{currentUser !== null ? (
 						<>
-						<Divider />
-						<List>
-							<ListItem disablePadding>
-								<ListItemButton>
+							<Divider />
+							<List>
+								<ListItem>
 									<ListItemIcon>
-										<Avatar sx={{ bgcolor: theme.palette.secondary.light }} alt={currentUser.name}>{currentUser.name[0].toUpperCase()}</Avatar>
+										<Avatar
+											sx={{ bgcolor: theme.palette.secondary.light }}
+											alt={currentUser.name}
+										>
+											{currentUser.name[0].toUpperCase()}
+										</Avatar>
 									</ListItemIcon>
 									<ListItemText>
-										{currentUser.name}<br />
-										<Typography lineHeight={1.2} fontWeight="bold" color="GrayText">
+										{currentUser.name}
+										<br />
+										<Typography
+											lineHeight={1.2}
+											fontWeight="bold"
+											color="GrayText"
+										>
 											{currentUser.email}
 										</Typography>
 									</ListItemText>
-								</ListItemButton>
-							</ListItem>
-						</List>
+								</ListItem>
+								<ListItem disablePadding>
+									<ListItemButton
+									component={Link}
+									to="/dashboard"
+									onClick={handleCloseDrawer}
+									>
+										<ListItemIcon>
+											<Dashboard />
+										</ListItemIcon>
+										<ListItemText>
+											Dashboard
+										</ListItemText>
+									</ListItemButton>
+								</ListItem>
+								<ListItem disablePadding>
+								<ListItemButton
+									onClick={handleLogout}
+									>
+										<ListItemIcon>
+											<Logout />
+										</ListItemIcon>
+										<ListItemText>
+											Logout
+										</ListItemText>
+									</ListItemButton>
+								</ListItem>
+							</List>
 						</>
-						:
-						null
-					}
+					) : null}
 					<Divider />
 					<List>
 						<ListSubheader>Hosting Services</ListSubheader>
 						<ListItem disablePadding>
 							<ListItemButton
-								onClick={handleListItemClick("/services/hosting/wordpress")}
+								component={Link}
+								to="/services/hosting/wordpress"
+								onClick={handleCloseDrawer}
 							>
 								<ListItemIcon>
 									<Web />
@@ -253,7 +382,11 @@ const AppTopBar = () => {
 							</ListItemButton>
 						</ListItem>
 						<ListItem disablePadding>
-							<ListItemButton onClick={handleListItemClick("/services/hosting/cloud")}>
+							<ListItemButton
+								component={Link}
+								to="/services/hosting/cloud"
+								onClick={handleCloseDrawer}
+							>
 								<ListItemIcon>
 									<Cloud />
 								</ListItemIcon>
@@ -261,7 +394,11 @@ const AppTopBar = () => {
 							</ListItemButton>
 						</ListItem>
 						<ListItem disablePadding>
-							<ListItemButton onClick={handleListItemClick("/services/hosting/vps")}>
+							<ListItemButton
+								component={Link}
+								to="/services/hosting/vps"
+								onClick={handleCloseDrawer}
+							>
 								<ListItemIcon>
 									<Storage />
 								</ListItemIcon>
@@ -273,7 +410,11 @@ const AppTopBar = () => {
 					<List>
 						<ListSubheader>Other Services</ListSubheader>
 						<ListItem disablePadding>
-							<ListItemButton onClick={handleListItemClick("/services/domains")}>
+							<ListItemButton
+								component={Link}
+								to="/services/domains"
+								onClick={handleCloseDrawer}
+							>
 								<ListItemIcon>
 									<Language />
 								</ListItemIcon>
@@ -281,7 +422,11 @@ const AppTopBar = () => {
 							</ListItemButton>
 						</ListItem>
 						<ListItem disablePadding>
-							<ListItemButton onClick={handleListItemClick("/services/databases")}>
+							<ListItemButton
+								component={Link}
+								to="/services/databases"
+								onClick={handleCloseDrawer}
+							>
 								<ListItemIcon>
 									<BackupTable />
 								</ListItemIcon>
@@ -292,7 +437,11 @@ const AppTopBar = () => {
 					<Divider />
 					<List>
 						<ListItem disablePadding>
-							<ListItemButton onClick={handleListItemClick("/")}>
+							<ListItemButton
+								component={Link}
+								to="/"
+								onClick={handleCloseDrawer}
+							>
 								<ListItemIcon>
 									<Home />
 								</ListItemIcon>
@@ -300,7 +449,11 @@ const AppTopBar = () => {
 							</ListItemButton>
 						</ListItem>
 						<ListItem disablePadding>
-							<ListItemButton onClick={handleListItemClick("/contact")}>
+							<ListItemButton
+								component={Link}
+								to="/contact"
+								onClick={handleCloseDrawer}
+							>
 								<ListItemIcon>
 									<Phone />
 								</ListItemIcon>
@@ -308,28 +461,28 @@ const AppTopBar = () => {
 							</ListItemButton>
 						</ListItem>
 						<ListItem disablePadding>
-							<ListItemButton onClick={handleListItemClick("/faq")}>
+							<ListItemButton
+								component={Link}
+								to="/faq"
+								onClick={handleCloseDrawer}
+							>
 								<ListItemIcon>
 									<HelpOutline />
 								</ListItemIcon>
 								<ListItemText>FAQ</ListItemText>
 							</ListItemButton>
 						</ListItem>
-						{
-							currentUser === null
-							?
+						{currentUser === null ? (
 							<ListItem>
-								<Button variant="outlined" fullWidth onClick={handleOpenModel}>
+								<Button variant="outlined" fullWidth onClick={handleopenModal}>
 									Login
 								</Button>
 							</ListItem>
-							:
-							null
-						}
+						) : null}
 					</List>
 				</Box>
 			</Drawer>
-			<AppTopBarAuthModel open={openModel} handleClose={handleCloseModel} />
+			<AppTopBarAuthModel open={openModal} handleClose={handleCloseModel} />
 		</AppBar>
 	);
 };

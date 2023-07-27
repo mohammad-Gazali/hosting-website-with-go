@@ -90,13 +90,13 @@ export const vpsHostingFeatures: Feature[] = [
 			"Benefit from enhanced security features and isolated environments with VPS hosting, safeguarding your website from potential threats.",
 	},
 	{
-		id: 3,
+		id: 4,
 		title: "VPS Customization",
 		description:
 			"Tailor your server environment to meet your specific requirements and preferences, maximizing performance and efficiency.",
 	},
 	{
-		id: 4,
+		id: 5,
 		title: "VPS Flexibility",
 		description:
 			"Enjoy full root access and the ability to install custom applications, allowing you to create a tailored hosting environment.",

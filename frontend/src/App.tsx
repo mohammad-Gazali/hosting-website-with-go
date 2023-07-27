@@ -1,10 +1,9 @@
 import { Box } from "@mui/material";
 import { AppFooter, AppTopBar } from "./components";
 import { Route, Routes } from "react-router-dom";
-import { Contact, FAQ, Home, HostingCloud, HostingVPS, HostingWordpress, ServiceDatabases, ServiceDomains } from "./pages";
+import { Contact, Dashboard, FAQ, Home, HostingCloud, HostingVPS, HostingWordpress, ServiceDatabases, ServiceDomains } from "./pages";
 import { AuthProvider } from "./context/AuthContext";
 
-// TODO: add logout to the app
 
 function App() {
   return (
@@ -15,6 +14,7 @@ function App() {
       <Box component="main">
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/dashborad" element={<Dashboard />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/faq" element={<FAQ />} />
           <Route path="/services/hosting/wordpress" element={<HostingWordpress />} />

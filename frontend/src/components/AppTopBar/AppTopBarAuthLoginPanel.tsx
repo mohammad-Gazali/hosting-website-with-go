@@ -61,6 +61,7 @@ const LoginPanel = ({ value, index, handleClose }: TabPanelLoginProps) => {
             }
         },
         onSuccess: () => {
+			localStorage.setItem("is_auth", "true");
             formRef.current?.reset();   
             handleClose();
 			handleGetUserData();

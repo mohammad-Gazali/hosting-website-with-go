@@ -33,7 +33,7 @@ const HostingPlansDetails = ({ plans }: HostingPlansDetailsProps) => {
 						</TableHead>
 						<TableBody sx={{ position: "relative" }}>
 							{planComparedFeatures.map(feature => (
-								<TableRow hover>
+								<TableRow key={feature} hover>
 									<TableCell sx={{ whiteSpace: "nowrap", borderRight: 1, borderRightColor: theme.palette.divider }}>{feature === "ssl" ? "SSL" : feature === "cdn" ? "CDN" : camelCaseToCapitalizedWords(feature)}</TableCell>
 									<TableCell>{handleTableCell(plans[0].comparedFeatures[feature].value)}</TableCell>
 									<TableCell>{handleTableCell(plans[1].comparedFeatures[feature].value)}</TableCell>

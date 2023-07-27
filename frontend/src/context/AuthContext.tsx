@@ -13,15 +13,17 @@ interface User {
 interface AuthContextType {
 	currentUser: User | null;
 	handleGetUserData: () => void;
+	removeCurrentUser: () => void;
 }
 
 const AuthContext = createContext<AuthContextType>({
-	handleGetUserData: () => {},
 	currentUser: {
 		email: "",
 		id: -1,
 		name: "",
 	},
+	handleGetUserData: () => {},
+	removeCurrentUser: () => {},
 });
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
@@ -30,17 +32,26 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	const handleGetUserData = () => {
 		axios.get(API_USER_ROUTE, { withCredentials: true })
 		.then(({data}) => setCurrentUser({ ...data.user }))
+		.then(() => localStorage.setItem("is_auth", "true"))
 		.catch(() => setCurrentUser(null));
 	}
 
+	const removeCurrentUser = () => {
+		localStorage.removeItem("is_auth");
+		setCurrentUser(null);
+	}
+
 	useEffect(() => {
-		handleGetUserData()
+		if (localStorage.getItem("is_auth")) {
+			handleGetUserData();
+		}
 	}, [])
 
 
 	const value: AuthContextType = {
-		handleGetUserData,
 		currentUser,
+		handleGetUserData,
+		removeCurrentUser,
 	};
 
 	return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

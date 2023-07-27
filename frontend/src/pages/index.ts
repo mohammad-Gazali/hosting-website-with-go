@@ -6,6 +6,7 @@ import HostingCloud from "./HostingCloud";
 import HostingVPS from "./HostingVPS";
 import ServiceDomains from "./ServiceDomains";
 import ServiceDatabases from "./ServiceDatabases";
+import Dashboard from "./Dashboard";
 
 
 export {
@@ -17,4 +18,5 @@ export {
     HostingVPS,
     ServiceDomains,
     ServiceDatabases,
+    Dashboard,
 }
