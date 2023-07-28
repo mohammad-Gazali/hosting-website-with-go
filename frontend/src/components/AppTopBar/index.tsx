@@ -1,9 +1,13 @@
 import {
+	Alert,
 	AppBar,
 	Avatar,
 	Box,
 	Button,
+	CircularProgress,
 	Container,
+	Dialog,
+	DialogContent,
 	Divider,
 	Drawer,
 	IconButton,
@@ -15,6 +19,7 @@ import {
 	ListSubheader,
 	Menu,
 	MenuItem,
+	Snackbar,
 	Toolbar,
 	Typography,
 	useTheme,
@@ -50,9 +55,10 @@ const AppTopBar = () => {
 		null
 	);
 	const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
-
 	const [drawerOpen, setDrawerOpen] = useState(false);
 	const [openModal, setOpenModal] = useState(false);
+	const [openLoadingDialog, setOpenLoadingDialog] = useState(false);
+	const [snackbarMessage, setSnackbarMessage] = useState("");
 
 	const openHosting = Boolean(anchorElHosting);
 	const openServices = Boolean(anchorElServices);
@@ -90,7 +96,7 @@ const AppTopBar = () => {
 		setDrawerOpen((prevState) => !prevState);
 	};
 
-	const handleopenModal = () => setOpenModal(true);
+	const handleOpenModal = () => setOpenModal(true);
 
 	const handleCloseModel = () => setOpenModal(false);
 
@@ -100,15 +106,27 @@ const AppTopBar = () => {
 		queryKey: ["auth-logout"],
 		enabled: false,
 		queryFn: async () => {
+			try {
+				// enable loading dialog
+				setOpenLoadingDialog(true);
 
-			// TODO: handle waiting state
+				const { status } = await axios.get(API_LOGOUT_ROUTE, {
+					withCredentials: true,
+				})
 
-			await axios.get(API_LOGOUT_ROUTE, {
-				withCredentials: true,
-			})
-			.then(() => removeCurrentUser())
-			.then(() => { /* // TODO: disable loading */ })
-			.catch(/* // TODO: handle error state */);
+				if (status === 200) removeCurrentUser()
+
+			} catch (error) {
+
+				setSnackbarMessage(String(error))
+
+			} finally {
+
+				setOpenLoadingDialog(false);
+				handleCloseUser();
+				handleCloseDrawer();
+
+			}
 
 			return null;
 		},
@@ -248,7 +266,7 @@ const AppTopBar = () => {
 							<Button
 								variant="outlined"
 								color="inherit"
-								onClick={handleopenModal}
+								onClick={handleOpenModal}
 							>
 								Login
 							</Button>
@@ -474,7 +492,7 @@ const AppTopBar = () => {
 						</ListItem>
 						{currentUser === null ? (
 							<ListItem>
-								<Button variant="outlined" fullWidth onClick={handleopenModal}>
+								<Button variant="outlined" fullWidth onClick={handleOpenModal}>
 									Login
 								</Button>
 							</ListItem>
@@ -483,6 +501,16 @@ const AppTopBar = () => {
 				</Box>
 			</Drawer>
 			<AppTopBarAuthModel open={openModal} handleClose={handleCloseModel} />
+			<Dialog open={openLoadingDialog} sx={{ p: 6 }}>
+				<DialogContent>
+					<CircularProgress />
+				</DialogContent>
+			</Dialog>
+			<Snackbar open={Boolean(snackbarMessage)} autoHideDuration={4000} onClose={() => setSnackbarMessage("")}>
+                <Alert onClose={() => setSnackbarMessage("")} severity="error" variant="filled">
+                    {snackbarMessage}
+                </Alert>
+            </Snackbar>
 		</AppBar>
 	);
 };
