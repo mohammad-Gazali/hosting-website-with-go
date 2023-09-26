@@ -6,6 +6,7 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/joho/godotenv"
 
+	"example/hosting-website/application"
 	"example/hosting-website/controllers"
 	"example/hosting-website/db"
 
@@ -49,7 +50,7 @@ func main() {
 
 
 	// Setup App Routes
-	SetupRoutes(app)	
+	application.SetupRoutes(app)	
 
 
 	// running the server
