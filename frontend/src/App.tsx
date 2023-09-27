@@ -14,7 +14,7 @@ function App() {
       <Box component="main">
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/dashborad" element={<Dashboard />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/faq" element={<FAQ />} />
           <Route path="/services/hosting/wordpress" element={<HostingWordpress />} />

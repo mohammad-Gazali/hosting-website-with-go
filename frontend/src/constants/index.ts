@@ -4,6 +4,8 @@ import numbers from "./numbers";
 import sponsors from "./sponsors";
 import testimonials from "./testimonials";
 import questions from "./questions";
+import domains from "./domains";
+import databases from "./databases";
 
 
 export {
@@ -13,4 +15,6 @@ export {
     sponsors,
     testimonials,
     questions,
+    domains,
+    databases,
 }
