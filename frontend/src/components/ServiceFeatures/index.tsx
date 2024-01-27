@@ -1,5 +1,5 @@
 import { Box, Stack } from "@mui/material";
-import { Feature } from "../../constants/services"
+import { Feature } from "../../constants/services-features"
 import { SectionTitle } from "..";
 import ServiceFeaturesFeature from "./ServiceFeaturesFeature";
 
